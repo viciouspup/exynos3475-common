@@ -515,7 +515,6 @@ static void rt6_probe(struct rt6_info *rt)
 	if (!neigh ||
 	    time_after(jiffies, neigh->updated + rt->rt6i_idev->cnf.rtr_probe_interval)) {
 		struct __rt6_probe_work *work;
-
 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
 
 		if (neigh && work)
