@@ -63,6 +63,14 @@ extern void tsp_dump(void);
 #define sec_debug_tsp_log(a, ...)		do { } while(0)
 #endif
 
+#ifdef CONFIG_SEC_DEBUG_LAST_KMSG
+#define SEC_LKMSG_MAGICKEY 0x0000000a6c6c7546
+extern void sec_debug_save_last_kmsg(unsigned char *head_ptr, unsigned char *curr_ptr, size_t buf_size);
+#else
+#define sec_debug_save_last_kmsg(a, b, c)		do { } while (0)
+#endif /* CONFIG_SEC_DEBUG_LAST_KMSG */
+
+
 enum sec_debug_upload_cause_t {
 	UPLOAD_CAUSE_INIT		= 0xCAFEBABE,
 	UPLOAD_CAUSE_KERNEL_PANIC	= 0x000000C8,

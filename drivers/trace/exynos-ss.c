@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
  *		http://www.samsung.com
@@ -1271,6 +1272,10 @@ static int __init exynos_ss_fixmap(void)
 		ess_info.info_log[i - 1].entry.size = size;
 	}
 	exynos_ss_output();
+	#ifdef CONFIG_SEC_DEBUG_LAST_KMSG
+	sec_debug_save_last_kmsg(ess_items[ess_desc.log_kernel_num].head_ptr,
+				 ess_items[ess_desc.log_kernel_num].curr_ptr, ess_items[ess_desc.log_kernel_num].entry.size);
+	#endif
 	return 0;
 }
 
