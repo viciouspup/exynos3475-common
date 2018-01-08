@@ -27,3 +27,10 @@ ro.bootimage.build.fingerprint=samsung/o5ltedd/o5lte:6.0.1/MMB29K/G550FYDDU1BPK2
 persist.service.adb.enable=1
 persist.service.debuggable=1
 persist.adb.notify=0
+# Disable Knox & Security tweaks
+ro.config.tima=0
+ro.security.mdpp.ux=Disabled
+ro.build.selinux=0
+ro.config.knox=0
+ro.securestorage.knox=false
+security.knox_kap_mode=false
