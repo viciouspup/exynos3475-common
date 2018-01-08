@@ -1,20 +1,25 @@
 #
 # ADDITIONAL_DEFAULT_PROPERTIES
 #
-telephony.lteOnCdmaDevice=0
-persist.radio.apm_sim_not_pwdn=1
-persist.radio.add_power_save=1
 rild.libpath=/system/lib/libsec-ril.so
 rild.libpath2=/system/lib/libsec-ril-dsds.so
-persist.security.ams.enforcing=1
+telephony.lteOnCdmaDevice=0
+persist.security.ams.enforcing=3
 ro.secure=1
 ro.allow.mock.location=0
 ro.debuggable=0
 ro.adb.secure=1
 persist.sys.usb.config=mtp
 ro.zygote=zygote32
-dalvik.vm.dex2oat-Xms=64m
-dalvik.vm.dex2oat-Xmx=512m
 dalvik.vm.image-dex2oat-Xms=64m
 dalvik.vm.image-dex2oat-Xmx=64m
+dalvik.vm.dex2oat-Xms=64m
+dalvik.vm.dex2oat-Xmx=512m
 ro.dalvik.vm.native.bridge=0
+debug.atrace.tags.enableflags=0
+#
+# BOOTIMAGE_BUILD_PROPERTIES
+#
+ro.bootimage.build.date=Thu Nov 24 15:00:16 KST 2016
+ro.bootimage.build.date.utc=1479967216
+ro.bootimage.build.fingerprint=samsung/o5ltedd/o5lte:6.0.1/MMB29K/G550FYDDU1BPK2:user/test-keys
