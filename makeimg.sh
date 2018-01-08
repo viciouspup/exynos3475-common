@@ -16,7 +16,7 @@ sudo cp -a /home/elite/android/J2_MM/rf-tools/J200G/split_img/. /home/elite/andr
 
 echo "copy compiled zimage"
 
-sudo cp /home/elite/android/J2_MM/arch/arm/boot/Image /home/elite/android/J2_MM/rf-tools/AIK-Linux/split_img/boot.img-zImage
+sudo cp /home/elite/android/J2_MM/arch/arm/boot/zImage /home/elite/android/J2_MM/rf-tools/AIK-Linux/split_img/boot.img-zImage
 
 echo "copy compiled dtb"
 

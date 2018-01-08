@@ -23,3 +23,6 @@ scripts/selinux/genheaders/genheaders
 scripts/selinux/mdp/mdp
 scripts/sortextable
 boot.img-dtb
+Module.symvers
+arch/arm/boot/zImage-dtb
+rf-tools/out/
