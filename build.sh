@@ -2,7 +2,7 @@
 DTS=arch/arm/boot/dts
 RDIR=$(pwd)
 # GCC
-export CROSS_COMPILE=/home/elite/android/toolchain/arm-eabi-4.8/bin/arm-eabi-
+export CROSS_COMPILE=/home/jhashivam2020/tc/bin/arm-eabi-
 # Cleanup
 make clean && make mrproper
 # J200G MM Defcon
