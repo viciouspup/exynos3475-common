@@ -3,7 +3,7 @@
 #
 
 config SMS_USB_DRV
-	tristate "Siano SMS1xxx based MDTV receiver"
+	bool "Siano SMS1xxx based MDTV receiver"
 	depends on DVB_CORE && HAS_DMA
 	select MEDIA_COMMON_OPTIONS
 	---help---
