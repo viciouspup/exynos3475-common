@@ -3,7 +3,6 @@
 arch/arm/include/generated/
 include/config/
 include/generated/
-rf-tools/ramdisks/
 scripts/basic/fixdep
 scripts/conmakehash
 scripts/dtc/dtc
@@ -25,4 +24,6 @@ scripts/sortextable
 boot.img-dtb
 Module.symvers
 arch/arm/boot/zImage-dtb
-rf-tools/out/
+b-tools/out/
+b-tools/zImage
+b-tools/zImage-dtb
