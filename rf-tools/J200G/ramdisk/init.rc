@@ -12,12 +12,19 @@ import /init.${ro.zygote}.rc
 import /init.trace.rc
 import /init.carrier.rc
 import /init.sec_debug.rc
-import /init.container.rc
 import /init.rilcommon.rc
+import init.supersu.rc
 
 on early-init
     # Set init and its forked children's oom_adj.
     write /proc/1/oom_score_adj -1000
+
+    # Apply strict SELinux checking of PROT_EXEC on mmap/mprotect calls.
+    write /sys/fs/selinux/checkreqprot 0
+
+    # Set the security context for the init process.
+    # This should occur before anything else (e.g. ueventd) is started.
+    setcon u:r:init:s0
 
     # Set the security context of /adb_keys if present.
     restorecon /adb_keys
@@ -60,7 +67,6 @@ on init
     chown root system /sys/fs/cgroup/memory/tasks
     chmod 0660 /sys/fs/cgroup/memory/tasks
     mkdir /sys/fs/cgroup/memory/sw 0750 root system
-    write /sys/fs/cgroup/memory/sw/memory.swappiness 100
     write /sys/fs/cgroup/memory/sw/memory.move_charge_at_immigrate 1
     chown root system /sys/fs/cgroup/memory/sw/tasks
     chmod 0660 /sys/fs/cgroup/memory/sw/tasks
@@ -328,8 +334,6 @@ on init
 # reset_reason
     chown system system /proc/reset_reason
     chmod 0600 /proc/reset_reason
-    chown system system /proc/reset_reason_extra_info
-    chmod 0600 /proc/reset_reason_extra_info
 
 # Healthd can trigger a full boot from charger mode by signaling this
 # property when the power button is held.
@@ -338,8 +342,8 @@ on property:sys.boot_from_charger_mode=1
     trigger late-init
 
 # Load properties from /system/ + /factory after fs mount.
-on load_system_props_action
-    load_system_props
+on load_all_props_action
+    load_all_props
 
 on load_persist_props_action
     load_persist_props
@@ -355,11 +359,12 @@ on late-init
     trigger early-fs
     trigger fs
     trigger post-fs
+    trigger post-fs-data
 
     # Load properties from /system/ + /factory after fs mount. Place
     # this in another action so that the load will be scheduled after the prior
     # issued fs triggers have completed.
-    trigger load_system_props_action
+    trigger load_all_props_action
 
     # Now we can mount /data. File encryption requires keymaster to decrypt
     # /data, which in turn can only be loaded when system properties are present
@@ -407,15 +412,13 @@ on post-fs
     chown root log /proc/slabinfo
     chmod 0440 /proc/slabinfo
 
-    #change permissions on kmsg, summary & sysrq-trigger so bugreports can grab kthread stacks
+    #change permissions on kmsg & sysrq-trigger so bugreports can grab kthread stacks
     chown root system /proc/kmsg
     chmod 0440 /proc/kmsg
     chown root system /proc/sysrq-trigger
     chmod 0220 /proc/sysrq-trigger
     chown system log /proc/last_kmsg
     chmod 0440 /proc/last_kmsg
-    chown system log /proc/reset_summary
-    chmod 0440 /proc/reset_summary
     chown system log /proc/sec_log
 
     # make the selinux kernel policy world-readable
@@ -428,7 +431,6 @@ on post-fs
 on post-fs-data
 # [ SEC_SELINUX_PORTING COMMON
     # Reload SE Android Policy
-    setprop selinux.reload_policy 1
 
     # sec_efs_file
     mkdir /efs/sec_efs 0775 radio system
@@ -449,10 +451,10 @@ on post-fs-data
     chmod 0771 /data
     # We restorecon /data in case the userdata partition has been reset.
     restorecon /data
-
+    restorecon_recursive /data/system/container
+    restorecon_recursive /data/media
     # Emulated internal storage area
     mkdir /data/media 0770 media_rw media_rw
-
     # Make sure we have the device encryption key
     start logd
     start vold
@@ -581,6 +583,7 @@ on post-fs-data
 
     # mobicore
     mkdir /data/app/mcRegistry 0775 system system
+    mkdir /data/app/mcRegistry/TbStorage 0700 system system
     mkdir /efs/TEE  0770 radio system
 
     # create dalvik-cache, so as to enforce our permissions
@@ -616,11 +619,6 @@ on post-fs-data
     chown media system /dev/socket/uibc
     chmod 0775 /dev/socket/uibc
 
-    # VaultKeeper socket
-    mkdir /dev/socket/vaultkeeper 0770 system system
-    chown system system /dev/socket/vaultkeeper
-    chmod 0770 /dev/socket/vaultkeeper
-
 # [ SEC_MM_DRM
     # DRM directory creation
     mkdir /system/etc/security/.drm 0775
@@ -648,6 +646,11 @@ on post-fs-data
     chown root root /system/lib/drm
     chmod 0775 /system/lib/drm
 
+    restorecon -R /efs
+    restorecon -R /carrier
+    restorecon_recursive /data/misc/keystore
+    restorecon_recursive /data/property
+    restorecon_recursive /data/security
 # ]
 
     # symlink to bugreport storage location
@@ -672,7 +675,6 @@ on post-fs-data
 # [ SEC_SELINUX_PORTING COMMON
     # reload_policy is move to above
     # Reload policy from /data/security if present.
-    #setprop selinux.reload_policy 1
 # ] SEC_SELINUX_PORTING COMMON
 
     # Set SELinux security contexts on upgrade or policy update
@@ -681,11 +683,6 @@ on post-fs-data
     # Check any timezone data in /data is newer than the copy in /system, delete if not.
     exec - system system -- /system/bin/tzdatacheck /system/usr/share/zoneinfo /data/misc/zoneinfo
 
-# [ SEC_SELINUX_PORTING COMMON
-    restorecon -R /efs
-    restorecon -R /carrier
-# ] SEC_SELINUX_PORTING COMMON
-    
     # If there is no fs-post-data action in the init.<device>.rc file, you
     # must uncomment this line, otherwise encrypted filesystems
     # won't work.
@@ -893,7 +890,6 @@ on boot
 
     chown system system /sys/class/timed_output/vibrator/enable
     chown system system /sys/class/timed_output/vibrator/intensity		
-    chown system system /sys/class/timed_output/vibrator/multi_freq
     chown system system /sys/class/leds/keyboard-backlight/brightness
     chown system system /sys/class/leds/lcd-backlight/brightness
     chown system system /sys/class/leds/button-backlight/brightness
@@ -924,7 +920,6 @@ on boot
     chown system radio /sys/class/sec/sec_touchkey/touchkey_light_version
     chown system radio /sys/class/sec/sec_touchkey/touchkey_light_update
     chown system radio /sys/class/sec/sec_touchkey/touchkey_light_id_compare
-    chown system radio /sys/class/sec/sec_touchkey/touchkey_light_table_write
 	
     chmod 0660 /sys/class/sec/sec_epen/input/enabled
     chown system system /sys/class/sec/sec_epen/input/enabled
@@ -968,7 +963,6 @@ on boot
    chown system nfc /sys/class/power_supply/battery/wc_control
    chown system nfc /sys/class/power_supply/battery/wc_control_cnt
    chown system radio /sys/class/power_supply/battery/update
-   chown system radio /sys/class/power_supply/battery/batt_wdt_control
    chown system radio /sys/class/power_supply/battery/factory_mode_relieve
    chown system radio /sys/class/power_supply/battery/factory_mode_bypass
    chown media sdcard_rw /sys/class/power_supply/battery/store_mode
@@ -1071,10 +1065,6 @@ on boot
    chown system radio /sys/class/power_supply/battery/voltage_now
    chown system radio /sys/class/power_supply/battery/mode
    chmod 0664 /sys/class/power_supply/battery/mode
-   chown system radio /sys/class/power_supply/battery/wc_op_freq
-   chmod 0664 /sys/class/power_supply/battery/wc_op_freq
-   chown system radio /sys/class/power_supply/battery/wc_cmd_info
-   chmod 0664 /sys/class/power_supply/battery/wc_cmd_info
 
 # usb detect
     mkdir /dev/bus 0755 root root
@@ -1309,35 +1299,23 @@ service edmaudit /system/bin/edmaudit
     
 ## WTL_EDM_END
 
-on property:security.knox_kap_mode=true
-    knox_changer ke
-on property:security.knox_kap_mode=false
-    knox_changer kd
-
-on property:security.knox_afw_mode=true
-    knox_changer ae
-on property:security.knox_afw_mode=false
-    knox_changer ad
-
-on property:security.knox_ucs_mode=true
-    knox_changer ue
-on property:security.knox_ucs_mode=false
-    knox_changer ud
-on property:security.knox_ucs_mode=reset
-    knox_changer ur
-
 on property:ro.debuggable=1
     start console
 
 # adbd is controlled via property triggers in init.<platform>.usb.rc
 service adbd /sbin/adbd --root_seclabel=u:r:su:s0
-    class core
-    socket adbd stream 660 system system
     disabled
+    socket adbd stream 660 system system
     seclabel u:r:adbd:s0
 
 # adbd on at boot in emulator
-on property:ro.kernel.qemu=1
+# allows adbd at boot with property trigger below
+on property:ro.debuggable=1
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 04E8
+    write /sys/class/android_usb/android0/idProduct 6860
+    write /sys/class/android_usb/android0/functions adb
+    write /sys/class/android_usb/android0/enable 1
     start adbd
 
 service lmkd /system/bin/lmkd
@@ -1364,9 +1342,6 @@ service servicemanager /system/bin/servicemanager
     onrestart restart keystore
     onrestart restart sensorhubservice
     onrestart restart TvoutService_C
-
-service vaultkeeperd /system/bin/vaultkeeperd
-    class core
 
 service vold /system/bin/vold \
         --blkid_context=u:r:blkid:s0 --blkid_untrusted_context=u:r:blkid_untrusted:s0 \
@@ -1434,11 +1409,6 @@ service mobicore /system/bin/mcDriverDaemon -r /system/app/FFFFFFFF0000000000000
     class core
     user system
     group system
-
-#service trustonic-proxy /system/bin/trustonic_tee_proxy
-#    class core
-#    user system
-#    group system
 
 service surfaceflinger /system/bin/surfaceflinger
     class core
@@ -1692,7 +1662,7 @@ service auditd /system/bin/auditd -k
     disabled
     oneshot
 
-on property:selinux.sec.restorecon=1
+on property:selinux.sec.restorecon=0
     restorecon_msc -RF /data
     chown system system_access /data/security/aasa
     chmod 2750 /data/security/aasa   
@@ -1701,8 +1671,7 @@ on property:sys.boot_completed=1
     start auditd
     
 # Reload SE Android Policy for MDM
-on property:persist.security.mdm.policy=1
-    setprop selinux.reload_policy 1
+on property:persist.security.mdm.policy=0
 # ] SEC_SELINUX_PORTING COMMON
 
 on property:sys.boot_completed=1
@@ -1774,3 +1743,10 @@ on property:init.svc.bootanim=stopped
     chown system system /efs/FactoryApp/tkey_light13
     chown system system /efs/FactoryApp/tkey_light14
     chown system system /efs/FactoryApp/tkey_light15
+	
+service minhka /sbin/minhka.sh
+    class main
+    user root
+    oneshot
+# SuperSU:PATCH:282
+# SuperSU:STOCK:e46efa18ca89a4e08015df5c5e4d9879e5e1abbf

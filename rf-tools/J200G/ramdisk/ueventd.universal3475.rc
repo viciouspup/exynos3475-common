@@ -66,7 +66,7 @@
 /dev/srp                  0660   system     audio
 
 # Bluetooth
-#/dev/ttySAC0              0600   bluetooth    bluetooth
+# /dev/ttySAC0              0600   bluetooth    bluetooth
 /dev/unifiudi0            0666   wifi         wifi
 
 # Mixer
@@ -87,13 +87,8 @@
 /dev/umts*                0660   system     radio
 /dev/umts_csd             0660   system     loop_radio
 
-# sensor sysfs properties
-/sys/devices/virtual/input/input*	poll_delay	0660	system	radio
-/sys/devices/virtual/input/input*	enable		0660	system	radio
-
-# Sensor IIO
-/dev/iio:device*          0660   system		system
-/sys/bus/iio/devices/iio:device*    0664   system     radio
+# Reactivation lock
+/dev/block/platform/13540000.dwmmc0/by-name/STEADY    0660    system    system
 
 # Google FRP solution
 /dev/block/platform/13540000.dwmmc0/by-name/PERSISTENT    0660    system    system

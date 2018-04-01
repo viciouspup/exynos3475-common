@@ -1,0 +1,170 @@
+cat << CTAG
+  {
+         name:VOLTAGES,
+         elements:[
+         {
+               SPane:{
+                  title:"NOTICE!",
+                  description:"Please do not change these settings if you don't know what you're doing! Incorrect settings could seriously damage your device and I'm not willing to help if that happens! If your device freezes after applying settings, pull out the battery and try again(Synapse should avoid applying the bugged settings upon reboot). I have reduced the maximum voltage so no need to decrease further."
+               }
+            },
+			
+           {
+               SPane:{
+                  title:"CPU",
+               }
+            },
+  
+            {
+				SSeekBar:{
+					title:"Global Append",
+					description:"Be careful to do undervol: Upon saving, appends the given value to all values in the volt table and resets to zero. Please restart Synapse once saved to save new settings.",
+					max:100000,
+					min:-100000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage -42"
+				}
+			},
+           {
+				SSeekBar:{
+					description:"should be 1175000uv.",
+					title:"1.5 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1495000"
+				}
+			},
+			{
+				SSeekBar:{
+					description:"should be 162500uv.",
+					title:"1.4 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1404000"
+				}
+			},
+			{
+				SSeekBar:{
+					description:"should be 1050000uv.",
+					title:"1.3 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1300000"
+				}
+			},
+			{
+				SSeekBar:{
+					description:"should be 1000000uv.",
+					title:"1.2 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1196000"
+				}
+			},
+			{
+				SSeekBar:{
+					description:"should be 975000uv.",
+					title:"1.1 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1105000"
+				}
+			},
+			{
+				SSeekBar:{
+					description:"should be 925000uv.",
+					title:"1 GHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 1001000"
+				}},
+			{
+				SSeekBar:{
+					description:"should be 875000uv.",
+					title:"900 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 897000"
+				}},
+			{
+				SSeekBar:{
+					description:"should be 650000uv.",
+					title:"800 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 806000"
+				}},
+			{
+				SSeekBar:{
+					description:"should be 500000uv.",
+					title:"700 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 702000"
+				}},
+{
+				SSeekBar:{
+					description:"should be 500000uv.",
+					title:"600 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 598000"
+				}},
+{
+				SSeekBar:{
+					description:"should be 500000uv.",
+					title:"500 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 507000"
+				}},
+{
+				SSeekBar:{
+					description:"should be 500000uv.",
+					title:"400 MHZ",
+					max:1400000,
+					min:300000,
+					unit:"uV",
+					step:6250,
+					default:0,
+					action:"voltage 403000"
+				}},
+
+         ]
+      },
+CTAG

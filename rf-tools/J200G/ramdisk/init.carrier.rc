@@ -9,4 +9,12 @@ service imsd /system/bin/imsd
     user root
     group system radio net_raw inet net_admin
 
-
+# SIMLock Daemon
+on property:sys.mobicoredaemon.enable=true
+	start tsdaemon
+	service tsdaemon /system/bin/tsdaemon
+	class core
+	user system
+	group system
+        oneshot
+	disabled
