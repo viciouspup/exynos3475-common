@@ -38,7 +38,6 @@ dump_boot;
 # Ramdisk changes here
 
 
-
 write_boot;
 
 ## end install

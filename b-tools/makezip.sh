@@ -8,8 +8,9 @@ then
 fi
 
 
-export CDIR="$(pwd)"
+export CDIR="$(pwd)/.."
 rm -rf $CDIR/b-tools/zImage
-cp $CDIR/arch/arm/boot/zImage-dtb $CDIR/b-tools/
+rm -rf $CDIR/b-tools/out
+cp $CDIR/arch/arm/boot/zImage $CDIR/b-tools/
 mkdir -p $CDIR/b-tools/out/
-zip -r9 $CDIR/b-tools/out/UPDATE-Kernel-$1.zip $CDIR/b-tools/* -x README *.zip
+zip -r9 ./out/UPDATE-Kernel-$1.zip * -x README out/*.zip
