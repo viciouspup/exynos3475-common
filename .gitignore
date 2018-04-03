@@ -27,3 +27,4 @@ arch/arm/boot/zImage-dtb
 b-tools/out/
 b-tools/zImage
 b-tools/zImage-dtb
+.patch
