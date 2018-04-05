@@ -123,6 +123,11 @@ config CPU_FREQ_DEFAULT_GOV_ZZMOOVE
 	select CPU_FREQ_GOV_ZZMOOVE
 	help
 
+config CPU_FREQ_DEFAULT_GOV_WHEATLEY
+	bool "wheatley"
+	select CPU_FREQ_GOV_WHEATLEY
+	help
+
 endchoice
 
 config CPU_FREQ_GOV_PERFORMANCE
@@ -227,6 +232,12 @@ config CPU_FREQ_GOV_ZZMOOVE
 	depends on CPU_FREQ
 	help
 	'zzmoove' governor
+
+config CPU_FREQ_GOV_WHEATLEY
+	tristate "'wheatley' cpufreq governor"
+	depends on CPU_FREQ
+	help
+	'wheatley' governor
 
 config GENERIC_CPUFREQ_CPU0
 	tristate "Generic CPU0 cpufreq driver"
