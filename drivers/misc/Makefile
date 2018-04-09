@@ -59,6 +59,7 @@ obj-$(CONFIG_MIPI_LLI)		+= mipi-lli/
 obj-$(CONFIG_MCU_IPC)      += mcu_ipc/
 obj-y				+= mcu/
 obj-$(CONFIG_SEC_MODEM_V1)      += modem_v1/
+obj-$(CONFIG_BLX)		+= blx.o
 
 # Samsung Jack Support
 obj-$(CONFIG_SAMSUNG_JACK)	+= sec_jack.o
