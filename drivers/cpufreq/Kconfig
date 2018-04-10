@@ -256,7 +256,7 @@ config CPU_FREQ_GOV_BLU_ACTIVE
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called cpufreq_blu_active.
-designed for latency-sensitive workloads.
+	  designed for latency-sensitive workloads.
 
 config GENERIC_CPUFREQ_CPU0
 	tristate "Generic CPU0 cpufreq driver"
