@@ -2,7 +2,7 @@
 DTS=arch/arm/boot/dts
 RDIR=$(pwd)
 # GCC
-export CROSS_COMPILE=../tc/bin/arm-eabi-
+export CROSS_COMPILE=../linaro-7/bin/arm-eabi-
 # J200G MM Defcon
 make j2lteswa_MM_defconfig -j8
 make exynos3475-j2lte_swa_open_00.dtb exynos3475-j2lte_swa_open_01.dtb exynos3475-j2lte_swa_open_02.dtb exynos3475-j2lte_swa_open_03.dtb exynos3475-j2lte_swa_open_04.dtb -j8
