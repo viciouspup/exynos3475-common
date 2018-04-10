@@ -375,7 +375,6 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-delete-null-pointer-checks \
 		   -fdiagnostics-show-option \
 		   -Wno-format-security -Wno-logical-not-parentheses \
-		   -mtune=cortex-a53 \
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
