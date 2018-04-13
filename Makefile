@@ -374,7 +374,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -fno-delete-null-pointer-checks \
 		   -fdiagnostics-show-option \
-		   -Wno-format-security -Wno-logical-not-parentheses \
+		   -Wno-format-security -Wno-logical-not-parentheses
+
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
