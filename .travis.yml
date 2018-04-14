@@ -1,0 +1,34 @@
+language: C
+dist: trusty
+
+before_install:
+  
+  # Importent Build-Config
+  - export DEVICE=j2lte
+  - export TCLINK=https://github.com/Parthib24/armebi-4.9-toolchain
+  - export OFOLDER=$PWD/arch/arm/boot
+  ##
+  - git clone $TCLINK toolchain
+  - export CROSS_COMPILE=$PWD/toolchain/bin/arm-eabi-
+  - sudo apt-get -qq update
+  - sudo apt-get install -y build-essential kernel-package libncurses5-dev bzip2 curl
+
+# we're not installing anything
+
+install: true
+
+script:
+  # compiling commands (main)
+  - make j2lteswa_MM_defconfig
+  - make
+  # this part uploads output to a cloud
+  - cd $OFOLDER
+  - echo "Uploading Output" && curl --upload-file zImage https://transfer.sh
+
+deploy:
+  provider: releases
+  file: "$OFOLDER/zImage"
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
