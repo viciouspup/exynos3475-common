@@ -23,7 +23,7 @@ script:
   - make
   # this part uploads output to a cloud
   - cd $OFOLDER
-  - echo "Uploading Output" && curl --upload-file zImage https://transfer.sh
+  - echo "Uploading Output" && curl --upload-file zImage https://0x0.st
 
 deploy:
   provider: releases
