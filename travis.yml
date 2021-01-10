@@ -1,11 +1,12 @@
-language: C
+language: c
 dist: trusty
+os: linux
 
 before_install:
   
   # Importent Build-Config
   - export DEVICE=j2lte
-  - export TCLINK=https://github.com/Parthib24/armebi-4.9-toolchain
+  - export TCLINK=https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8
   - export OFOLDER=$PWD/arch/arm/boot
   ##
   - git clone $TCLINK toolchain
@@ -23,12 +24,12 @@ script:
   - make
   # this part uploads output to a cloud
   - cd $OFOLDER
-  - echo "Uploading Output" && curl --upload-file zImage https://0x0.st
+  - echo "Uploading Output" && curl --upload-file zImage https://transfer.sh/zImage
 
 deploy:
   provider: releases
   file: "$OFOLDER/zImage"
-  skip_cleanup: true
+  cleanup: true
   on:
     tags: true
     all_branches: true
